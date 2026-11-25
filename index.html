@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jokiaja.bre — Layanan Akademik & Produktivitas Mahasiswa</title>
+  <meta name="description" content="Katalog layanan bantuan akademik: konsultasi tugas, proofreading, formatting makalah, desain presentasi, dan konsultasi teknologi. Pesan lewat WhatsApp.">
+  <meta name="theme-color" content="#0B0D12">
+
+  <!-- Terapkan tema sebelum render agar tidak berkedip -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("site-theme");
+        var theme = saved || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {}
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js" defer></script>
+  <script src="js/config.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <div class="pagebar" id="pageBar" aria-hidden="true"></div>
+  <a class="skip" href="#konten">Lewati ke konten</a>
+
+  <!-- ============ NAVBAR ============ -->
+  <header class="nav" id="nav">
+    <div class="container nav__in">
+      <a class="logo" href="#home" aria-label="Beranda">
+        <span class="logo__mark" aria-hidden="true"><iconify-icon icon="lucide:file-pen-line"></iconify-icon></span>
+        <span class="logo__text" data-brand-name>jokiaja.bre</span>
+      </a>
+
+      <nav class="nav__links" id="navLinks" aria-label="Navigasi utama">
+        <a href="#home" data-link>Home</a>
+        <a href="#katalog" data-link>Katalog Layanan</a>
+        <a href="#cara-pemesanan" data-link>Cara Pemesanan</a>
+        <a href="#tentang" data-link>Tentang Kami</a>
+        <a href="#faq" data-link>FAQ</a>
+        <a class="btn btn--primary nav__cta-mobile" href="#katalog" data-link>
+          Pesan Sekarang <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+        </a>
+      </nav>
+
+      <div class="nav__actions">
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Ganti tema">
+          <iconify-icon class="i-sun" icon="lucide:sun"></iconify-icon>
+          <iconify-icon class="i-moon" icon="lucide:moon"></iconify-icon>
+        </button>
+        <a class="btn btn--primary nav__cta" href="#katalog" data-link>Pesan Sekarang</a>
+        <button class="icon-btn nav__burger" id="burger" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="navLinks">
+          <span class="burger" aria-hidden="true"><i></i><i></i></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="konten">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="home">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <h1 class="reveal" style="--d:80ms">Kebutuhan Akademikmu, <em>Jadi Lebih Mudah.</em></h1>
+          <p class="lead reveal" style="--d:160ms">Temukan solusi untuk kebutuhan akademik dan produktivitasmu. Layanan profesional, proses mudah, dan hasil yang lebih terorganisir.</p>
+          <div class="hero__cta reveal" style="--d:240ms">
+            <a class="btn btn--primary btn--lg" href="#katalog" data-link>Jelajahi Layanan <iconify-icon icon="lucide:arrow-down-right"></iconify-icon></a>
+            <button class="btn btn--outline btn--lg" type="button" data-consult>
+              <iconify-icon icon="simple-icons:whatsapp"></iconify-icon> Konsultasi Gratis
+            </button>
+          </div>
+          <dl class="stats reveal" style="--d:320ms" id="heroStats"></dl>
+        </div>
+
+        <div class="hero__visual" aria-hidden="true">
+          <div class="vis">
+            <div class="vis__grid"></div>
+            <div class="vis__ring"></div>
+            <div class="vis__ring vis__ring--2"></div>
+
+            <article class="fcard fcard--a">
+              <header><span class="fcard__ic" data-cat="editing"><iconify-icon icon="lucide:spell-check"></iconify-icon></span><span class="fcard__tag">Editing</span></header>
+              <h4>Proofreading</h4>
+              <p>Estimasi 12–24 jam</p>
+              <div class="bar"><i></i></div>
+            </article>
+
+            <article class="fcard fcard--b">
+              <header><span class="fcard__ic" data-cat="desain"><iconify-icon icon="lucide:presentation"></iconify-icon></span><span class="fcard__tag">Desain</span></header>
+              <div class="slide">
+                <b></b><i></i><i></i><span></span>
+              </div>
+              <h4>Desain Presentasi</h4>
+            </article>
+
+            <article class="fcard fcard--c">
+              <header><span class="fcard__ic" data-cat="penulisan"><iconify-icon icon="lucide:book-open"></iconify-icon></span><span class="fcard__tag">Penulisan</span></header>
+              <h4>Konsultasi Makalah</h4>
+              <ul>
+                <li><iconify-icon icon="lucide:check"></iconify-icon> Outline</li>
+                <li><iconify-icon icon="lucide:check"></iconify-icon> Draf pertama</li>
+                <li class="is-next"><iconify-icon icon="lucide:circle-dashed"></iconify-icon> Tinjauan akhir</li>
+              </ul>
+            </article>
+
+            <article class="fcard fcard--d">
+              <span class="fcard__ic" data-cat="teknologi"><iconify-icon icon="lucide:code-xml"></iconify-icon></span>
+              <div><h4>Teknologi</h4><p>Debugging, database, web</p></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ KATALOG ============ -->
+    <section class="section catalog" id="katalog">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="eyebrow">Katalog Layanan</p>
+          <h2>Pilih bantuan yang <em>paling pas</em> untuk tugasmu.</h2>
+          <p class="section__sub">Harga di bawah adalah harga mulai dari. Nominal akhir disepakati setelah Anda menjelaskan kebutuhan.</p>
+        </header>
+
+        <div class="toolbar reveal" role="search">
+          <label class="search">
+            <iconify-icon icon="lucide:search"></iconify-icon>
+            <input id="q" type="search" placeholder="Cari layanan, mis. proofreading" autocomplete="off" aria-label="Cari layanan">
+            <button type="button" class="search__clear" id="qClear" aria-label="Hapus pencarian" hidden><iconify-icon icon="lucide:x"></iconify-icon></button>
+          </label>
+          <label class="select">
+            <span>Harga</span>
+            <select id="priceFilter" aria-label="Filter harga">
+              <option value="all">Semua harga</option>
+              <option value="0-40000">Di bawah Rp40.000</option>
+              <option value="40000-80000">Rp40.000 – Rp80.000</option>
+              <option value="80000-150000">Rp80.000 – Rp150.000</option>
+              <option value="150000-">Di atas Rp150.000</option>
+            </select>
+            <iconify-icon icon="lucide:chevron-down"></iconify-icon>
+          </label>
+          <label class="select">
+            <span>Urutkan</span>
+            <select id="sortBy" aria-label="Urutkan layanan">
+              <option value="newest">Terbaru</option>
+              <option value="price-asc">Harga termurah</option>
+              <option value="price-desc">Harga tertinggi</option>
+            </select>
+            <iconify-icon icon="lucide:chevron-down"></iconify-icon>
+          </label>
+        </div>
+
+        <div class="chips reveal" id="chips" role="group" aria-label="Kategori layanan"></div>
+        <p class="result-count" id="resultCount" aria-live="polite"></p>
+
+        <div class="grid" id="grid"></div>
+
+        <div class="empty" id="empty" hidden>
+          <span class="empty__ic"><iconify-icon icon="lucide:search-x"></iconify-icon></span>
+          <h3>Layanan tidak ditemukan</h3>
+          <p>Coba kata kunci lain, ganti kategori, atau longgarkan filter harga. Jika layanan yang Anda cari belum ada, tanyakan langsung kepada kami.</p>
+          <div class="empty__actions">
+            <button class="btn btn--outline" type="button" id="resetFilters"><iconify-icon icon="lucide:rotate-ccw"></iconify-icon> Atur ulang filter</button>
+            <button class="btn btn--primary" type="button" data-consult><iconify-icon icon="simple-icons:whatsapp"></iconify-icon> Tanya via WhatsApp</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CARA PEMESANAN ============ -->
+    <section class="section steps" id="cara-pemesanan">
+      <div class="container steps__grid">
+        <header class="section__head steps__head reveal">
+          <p class="eyebrow">Cara Pemesanan</p>
+          <h2>Lima langkah, <em>tanpa drama.</em></h2>
+          <p class="section__sub">Dari memilih layanan sampai menerima hasil akhir, semua berjalan lewat satu percakapan WhatsApp.</p>
+        </header>
+        <ol class="timeline" id="timeline"></ol>
+      </div>
+    </section>
+
+    <!-- ============ KEUNGGULAN ============ -->
+    <section class="section benefits" id="keunggulan">
+      <div class="container">
+        <header class="section__head section__head--row reveal">
+          <div>
+            <p class="eyebrow">Keunggulan</p>
+            <h2>Dirancang agar <em>urusan akademikmu</em> lebih ringan.</h2>
+          </div>
+        </header>
+        <div class="bento" id="bento"></div>
+      </div>
+    </section>
+
+    <!-- ============ TESTIMONI ============ -->
+    <section class="section testi" id="testimoni">
+      <div class="container">
+        <header class="section__head section__head--row reveal">
+          <div>
+            <p class="eyebrow">Testimoni</p>
+            <h2>Kata mereka yang <em>sudah mencoba.</em></h2>
+          </div>
+          <div class="carousel-nav">
+            <button class="icon-btn icon-btn--outline" id="prevT" type="button" aria-label="Testimoni sebelumnya"><iconify-icon icon="lucide:arrow-left"></iconify-icon></button>
+            <button class="icon-btn icon-btn--outline" id="nextT" type="button" aria-label="Testimoni berikutnya"><iconify-icon icon="lucide:arrow-right"></iconify-icon></button>
+          </div>
+        </header>
+        <div class="carousel" id="carousel" tabindex="0" aria-label="Daftar testimoni"></div>
+        <div class="dots" id="dots" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ============ TENTANG ============ -->
+    <section class="section about" id="tentang">
+      <div class="container about__grid">
+        <div class="about__main reveal">
+          <p class="eyebrow">Tentang Kami</p>
+          <blockquote id="aboutQuote"></blockquote>
+          <div class="about__text" id="aboutText"></div>
+        </div>
+        <ul class="principles" id="principles"></ul>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="section faq" id="faq">
+      <div class="container faq__grid">
+        <header class="section__head faq__head reveal">
+          <p class="eyebrow">FAQ</p>
+          <h2>Pertanyaan yang <em>sering muncul.</em></h2>
+          <p class="section__sub">Tidak menemukan jawabannya? Tanyakan langsung, kami balas secepatnya.</p>
+          <button class="btn btn--outline" type="button" data-consult><iconify-icon icon="simple-icons:whatsapp"></iconify-icon> Tanya via WhatsApp</button>
+        </header>
+        <div class="accordion" id="accordion"></div>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="cta">
+      <div class="container">
+        <div class="cta__box reveal">
+          <div>
+            <h2>Belum yakin layanan mana yang kamu butuhkan?</h2>
+            <p>Ceritakan tugasmu, kami bantu tentukan langkah paling masuk akal. Konsultasi awal gratis.</p>
+          </div>
+          <button class="btn btn--accent-inv btn--lg" type="button" data-consult>
+            <iconify-icon icon="simple-icons:whatsapp"></iconify-icon> Konsultasi Gratis
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <a class="logo" href="#home">
+          <span class="logo__mark" aria-hidden="true"><iconify-icon icon="lucide:file-pen-line"></iconify-icon></span>
+          <span class="logo__text" data-brand-name>jokiaja.bre</span>
+        </a>
+        <p data-tagline></p>
+      </div>
+      <nav aria-label="Navigasi footer">
+        <h5>Navigasi</h5>
+        <ul>
+          <li><a href="#home" data-link>Home</a></li>
+          <li><a href="#katalog" data-link>Katalog Layanan</a></li>
+          <li><a href="#cara-pemesanan" data-link>Cara Pemesanan</a></li>
+          <li><a href="#tentang" data-link>Tentang Kami</a></li>
+          <li><a href="#faq" data-link>FAQ</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Kategori layanan">
+        <h5>Kategori</h5>
+        <ul id="footerCats"></ul>
+      </nav>
+      <div>
+        <h5>Kontak</h5>
+        <ul class="contact">
+          <li><a id="fWa" href="#" target="_blank" rel="noopener"><iconify-icon icon="simple-icons:whatsapp"></iconify-icon> WhatsApp</a></li>
+          <li><a id="fIg" href="#" target="_blank" rel="noopener"><iconify-icon icon="lucide:instagram"></iconify-icon> <span></span></a></li>
+          <li><a id="fMail" href="#"><iconify-icon icon="lucide:mail"></iconify-icon> <span></span></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer__bar">
+      <p>&copy; <span id="year"></span> <span data-brand-name>jokiaja.bre</span>. Seluruh hak cipta dilindungi.</p>
+      <button class="to-top" type="button" id="toTop"><iconify-icon icon="lucide:arrow-up"></iconify-icon> Kembali ke atas</button>
+    </div>
+  </footer>
+
+  <!-- ============ MODAL DETAIL ============ -->
+  <dialog class="modal" id="detail" aria-labelledby="dTitle">
+    <div class="modal__box" id="detailBody"></div>
+  </dialog>
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+</body>
+</html>
