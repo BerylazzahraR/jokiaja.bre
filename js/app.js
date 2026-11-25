@@ -170,8 +170,9 @@
   /* ==========================================================
      KATALOG
      ========================================================== */
-  const state = { q: "", cat: "all", price: "all", sort: "newest" };
-  const grid = $("#grid"), emptyEl = $("#empty"), countEl = $("#resultCount");
+  const LIMIT = 10;
+  const state = { q: "", cat: "all", price: "all", sort: "newest", showAll: false };
+  const grid = $("#grid"), emptyEl = $("#empty"), countEl = $("#resultCount"), moreEl = $("#catalogMore"), moreBtn = $("#showMoreBtn");
   const qInput = $("#q"), qClear = $("#qClear"), priceSel = $("#priceFilter"), sortSel = $("#sortBy");
   let skeletonTimer;
 
@@ -218,18 +219,26 @@
 
   function renderGrid() {
     const list = getFiltered();
+    const visible = state.showAll ? list : list.slice(0, LIMIT);
     grid.setAttribute("aria-busy", "false");
-    grid.innerHTML = list.map((s, i) => cardHTML(s, i, list.length > 2)).join("");
+    grid.innerHTML = visible.map((s, i) => cardHTML(s, i, visible.length > 2)).join("");
     grid.hidden = list.length === 0;
     emptyEl.hidden = list.length !== 0;
+    if (moreEl && moreBtn) {
+      moreEl.hidden = list.length <= LIMIT;
+      moreBtn.innerHTML = state.showAll
+        ? `Tampilkan lebih sedikit ${ic("lucide:chevron-up")}`
+        : `Cari yang lain (${list.length - LIMIT} lagi) ${ic("lucide:chevron-down")}`;
+    }
     countEl.textContent = list.length
-      ? `Menampilkan ${list.length} dari ${DATA.services.length} layanan`
+      ? `Menampilkan ${visible.length} dari ${list.length} layanan`
       : "Tidak ada layanan yang cocok dengan filter";
     qClear.hidden = !state.q;
   }
 
   function renderSkeleton(n = 6) {
     grid.hidden = false; emptyEl.hidden = true;
+    if (moreEl) moreEl.hidden = true;
     grid.setAttribute("aria-busy", "true");
     grid.innerHTML = Array.from({ length: n }, () => '<div class="sk" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>').join("");
   }
@@ -249,11 +258,90 @@
   }
   function syncChips() { $$("#chips .chip").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.chip === state.cat))); }
 
-  function setCategory(id) { state.cat = id; syncChips(); update(); }
+  function setCategory(id) { state.cat = id; state.showAll = false; syncChips(); update(); }
+
+  function enhanceSelect(sel) {
+    const wrap = sel.closest(".select");
+    if (!wrap) return () => {};
+    sel.hidden = true;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "cselect__btn";
+    btn.setAttribute("aria-haspopup", "listbox");
+    btn.setAttribute("aria-expanded", "false");
+
+    const menu = document.createElement("div");
+    menu.className = "cselect__menu";
+    menu.setAttribute("role", "listbox");
+    menu.hidden = true;
+
+    const opts = Array.from(sel.options).map((o) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "cselect__opt";
+      b.setAttribute("role", "option");
+      b.dataset.value = o.value;
+      b.innerHTML = `<span>${esc(o.textContent)}</span>${ic("lucide:check")}`;
+      b.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (sel.value !== o.value) {
+          sel.value = o.value;
+          sel.dispatchEvent(new Event("change"));
+        }
+        sync();
+        closeAll();
+      });
+      menu.appendChild(b);
+      return b;
+    });
+
+    const sync = () => {
+      const active = sel.options[sel.selectedIndex];
+      btn.textContent = active ? active.textContent : "";
+      opts.forEach((b) => {
+        const on = b.dataset.value === sel.value;
+        b.classList.toggle("is-selected", on);
+        b.setAttribute("aria-selected", String(on));
+      });
+    };
+
+    const setOpen = (open) => {
+      wrap.classList.toggle("is-open", open);
+      menu.hidden = !open;
+      btn.setAttribute("aria-expanded", String(open));
+    };
+
+    const closeAll = () => {
+      $$(".select.is-open").forEach((w) => {
+        w.classList.remove("is-open");
+        const m = $(".cselect__menu", w);
+        const b = $(".cselect__btn", w);
+        if (m) m.hidden = true;
+        if (b) b.setAttribute("aria-expanded", "false");
+      });
+    };
+
+    wrap.insertBefore(btn, sel);
+    wrap.appendChild(menu);
+    wrap.addEventListener("click", (e) => {
+      if (e.target.closest(".cselect__menu")) return;
+      e.preventDefault();
+      const willOpen = menu.hidden;
+      closeAll();
+      if (willOpen) setOpen(true);
+    });
+
+    sync();
+    return sync;
+  }
+
+  const syncSelects = [];
 
   function resetFilters() {
-    Object.assign(state, { q: "", cat: "all", price: "all", sort: "newest" });
+    Object.assign(state, { q: "", cat: "all", price: "all", sort: "newest", showAll: false });
     qInput.value = ""; priceSel.value = "all"; sortSel.value = "newest";
+    syncSelects.forEach((fn) => fn());
     syncChips(); update();
     toast("Filter diatur ulang", "lucide:rotate-ccw");
   }
@@ -263,16 +351,41 @@
     renderSkeleton();
     setTimeout(renderGrid, reduceMotion ? 0 : 650);
 
+    syncSelects.push(enhanceSelect(priceSel), enhanceSelect(sortSel));
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".select")) {
+        $$(".select.is-open").forEach((w) => {
+          w.classList.remove("is-open");
+          const m = $(".cselect__menu", w);
+          const b = $(".cselect__btn", w);
+          if (m) m.hidden = true;
+          if (b) b.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        $$(".select.is-open").forEach((w) => {
+          w.classList.remove("is-open");
+          const m = $(".cselect__menu", w);
+          const b = $(".cselect__btn", w);
+          if (m) m.hidden = true;
+          if (b) b.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+
     let debounce;
     qInput.addEventListener("input", () => {
-      state.q = qInput.value; qClear.hidden = !state.q;
+      state.q = qInput.value; state.showAll = false; qClear.hidden = !state.q;
       clearTimeout(debounce); debounce = setTimeout(() => update({ skeleton: false }), 120);
     });
-    qClear.addEventListener("click", () => { qInput.value = ""; state.q = ""; qClear.hidden = true; update({ skeleton: false }); qInput.focus(); });
-    priceSel.addEventListener("change", () => { state.price = priceSel.value; update(); });
-    sortSel.addEventListener("change", () => { state.sort = sortSel.value; update(); });
+    qClear.addEventListener("click", () => { qInput.value = ""; state.q = ""; state.showAll = false; qClear.hidden = true; update({ skeleton: false }); qInput.focus(); });
+    priceSel.addEventListener("change", () => { state.price = priceSel.value; state.showAll = false; update(); });
+    sortSel.addEventListener("change", () => { state.sort = sortSel.value; state.showAll = false; update(); });
     $("#resetFilters").addEventListener("click", resetFilters);
     $("#chips").addEventListener("click", (e) => { const b = e.target.closest("[data-chip]"); if (b) setCategory(b.dataset.chip); });
+    if (moreBtn) moreBtn.addEventListener("click", () => { state.showAll = !state.showAll; renderGrid(); });
   }
 
   /* ==========================================================
